@@ -1,0 +1,5 @@
+{
+  "name": "Othello AI Master",
+  "description": "A sophisticated Othello (Reversi) game featuring a powerful Gemini-powered AI opponent, real-time move suggestions, and a beautiful dark-themed UI.",
+  "requestFramePermissions": []
+}
