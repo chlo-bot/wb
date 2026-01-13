@@ -6,10 +6,11 @@ export const getGeminiMove = async (board: Board, player: Player, validMoves: Po
   if (validMoves.length === 0) return null;
   if (validMoves.length === 1) return validMoves[0];
 
-  // 每次呼叫時初始化，以確保獲取最新的 API_KEY 環境變數
-  const apiKey = process.env.API_KEY;
+  // In Vite, environment variables defined in 'define' or prefixed with VITE_ are accessible
+  const apiKey = (process.env as any).API_KEY;
+  
   if (!apiKey) {
-    console.warn("API_KEY not found. Falling back to basic strategy.");
+    console.warn("API_KEY not found. Ensure it is set in Vercel environment variables.");
     return fallbackStrategy(validMoves);
   }
 
@@ -53,7 +54,10 @@ export const getGeminiMove = async (board: Board, player: Player, validMoves: Po
       }
     });
 
-    const result = JSON.parse(response.text || '{}');
+    const text = response.text;
+    if (!text) throw new Error("Empty response from AI");
+    
+    const result = JSON.parse(text);
     const isValid = validMoves.some(m => m.r === result.r && m.c === result.c);
     return isValid ? result : validMoves[0];
   } catch (error) {
